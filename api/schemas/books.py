@@ -1,0 +1,23 @@
+from pydantic import BaseModel
+from typing import Optional, List
+
+class BookBase(BaseModel):
+    title: str
+    author: str
+    year: Optional[int] = None
+    genre: str
+    price: float
+    total_count: Optional[int] = None
+
+class BookCreate(BookBase):
+    pass
+
+class BookinDB(BookBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class BookPublic(BaseModel):
+    total_count: int
+    data: List[BookinDB]
