@@ -4,10 +4,8 @@ from typing import Optional, List
 class BookBase(BaseModel):
     title: str
     author: str
-    year: Optional[int] = None
+    year: int
     genre: str
-    price: float
-    total_count: Optional[int] = None
 
 class BookCreate(BookBase):
     pass

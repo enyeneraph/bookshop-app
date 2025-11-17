@@ -1,5 +1,5 @@
 from dotenv import dotenv_values
-config = dotenv_values("/Users/enne/Documents/Learnings/Phelix/book-app/app/.env")
+config = dotenv_values("c:/Users/OWNER/Desktop/bookshop-app/.env")
 
 POSTGRES_DB = config["POSTGRES_DB"]
 POSTGRES_SERVER = config["POSTGRES_SERVER"]

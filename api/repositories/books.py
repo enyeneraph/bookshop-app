@@ -3,6 +3,8 @@ from sqlalchemy import select, insert
 from models import Book
 from schemas import BookCreate, BookPublic, BookinDB
 from sqlalchemy.sql import func
+from fastapi import HTTPException
+import sqlalchemy
 
 class BookRepository(BaseRepository):
     def __init__(self, db):
@@ -19,8 +21,12 @@ class BookRepository(BaseRepository):
 
     async def get_book_by_id(self, book_id:int):
         query = select(Book).where(Book.id == book_id)
-        book = self.db.execute(query).scalars().one()
-        return book
+        book = self.db.execute(query)
+        try:
+            books = book.scalars().one()
+            return books
+        except sqlalchemy.exc.NoResultFound:
+            return None
     
     async def create_book(self, book:BookCreate):
         values = book.model_dump(exclude_none=True)
