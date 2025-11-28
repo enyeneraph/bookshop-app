@@ -72,6 +72,11 @@ class BookMetaData(Base):
     book_id: Mapped[int] = mapped_column(ForeignKey("books.id"))
     total_count: Mapped[int]
 
-    book: Mapped['Users'] = relationship(back_populates="book_data")
+    book: Mapped['Book'] = relationship(back_populates="book_data")
 
 # Base.metadata.create_all(engine)
+
+class Blacklist(Base):
+    __tablename__= "blacklist"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    tokens: Mapped[str]

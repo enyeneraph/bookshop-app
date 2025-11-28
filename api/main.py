@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from database import create_all_tables
-from models import BookMetaData
 import uvicorn
 from routes import router
 

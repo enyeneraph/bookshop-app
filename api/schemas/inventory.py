@@ -1,6 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional, List
-from schemas.books import BookBase
+from typing import List
 from datetime import datetime
 
 class InventoryBase(BaseModel):

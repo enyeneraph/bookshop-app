@@ -1,14 +1,16 @@
 from repositories.base import BaseRepository
 from sqlalchemy import select, insert
 from models.books import BookInventory
-from schemas import InventoryPublic, InventoryInDb, InventoryBase
+from schemas import InventoryPublic, InventoryInDb, InventoryBase,UserInDb
 from sqlalchemy.sql import func
+from repositories.users import get_current_user
+from fastapi import Depends
 
 class InventoryRepo(BaseRepository):
     def __init__(self, db):
         super().__init__(db)
 
-    async def get_inventory(self):
+    async def get_inventory(self, current_user: UserInDb = Depends(get_current_user)):
         query = select(BookInventory)
         inventory = self.db.execute(query).scalars().all()
         count_query = select(func.count()).select_from(BookInventory)
