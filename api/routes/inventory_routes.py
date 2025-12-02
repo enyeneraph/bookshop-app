@@ -16,7 +16,7 @@ async def view(inventory_repo:InventoryRepo= Depends(get_repository(InventoryRep
 
 @router.post("/", response_model=InventoryInDb)
 async def add(inventory: InventoryBase, inventory_repo:InventoryRepo= Depends(get_repository(InventoryRepo)), current_user: UserInDb = Depends(get_current_user)):
-    inventory = await inventory_repo.add_book(inventory)
+    inventory = await inventory_repo.add_inventory(inventory)
     return inventory
 
 @router.delete("/{id}")
