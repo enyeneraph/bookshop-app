@@ -1,11 +1,9 @@
 from repositories.base import BaseRepository
 from sqlalchemy import select, insert
-from models.books import Orders, Users
+from models.books import Orders, Users, Cart
 from schemas import OrdersInDb, OrdersPublic, OrderBase,UserInDb
 from sqlalchemy.sql import func
-from fastapi import HTTPException, Depends
 import sqlalchemy
-from auth import get_current_user
 from repositories import BookRepository
 
 class OrderRepo(BaseRepository):
@@ -13,42 +11,50 @@ class OrderRepo(BaseRepository):
         super().__init__(db)
         self.book_repo = BookRepository(db)
 
-    async def get_all_orders(self, current_user: UserInDb = Depends(get_current_user)):
-        query = select(Orders).filter(Orders.user_id == current_user.id)
+    async def get_all_orders(self, user_id: int):
+        query = select(Orders).where(Orders.user_id == user_id)
         orders = self.db.execute(query).scalars().all()
         count_query = select(func.count()).select_from(Orders)
         count = self.db.execute(count_query).one()
-        orders = [OrdersInDb.model_validate(orders) for order in orders]
+        orders = [OrdersInDb.model_validate(order) for order in orders]
         result = OrdersPublic(total_count=count[0], data=orders)
         return result
 
-    async def add_order(self, order: OrderBase, current_user: UserInDb = Depends(get_current_user)):
+    async def add_order(self, user_id: int, order: OrderBase):
         try:
-            query = select(Users).where(Users.id == current_user.id)
-            result = self.db.execute(query)
-            values = order.model_dump(exclude_none=True)
-            order = Orders(**values)
+            try:
+                values = order.model_dump(exclude_none=True)
+                values.update({"user_id": user_id})
+
+                query = select(Cart).filter(Cart.user_id == user_id, Cart.checked_out == False)
+                cart_data = self.db.execute(query).scalar_one()
+                values.update({"cart_id": cart_data.id})
+                order = Orders(**values)
+            except sqlalchemy.exc.NoResultFound:
+                cart_data = Cart(user_id= user_id, price= 0)
+                order = Orders(**values)
+                order.cart = cart_data
             self.db.add(order)
-            # await self.book_repo.reduce_book_count(book_id, count)
+            await self.book_repo.reduce_book_count(order.book_id, order.count)
             self.db.commit()
             self.db.refresh(order)
             return order
-        except sqlalchemy.exc.NoResultFound:
+        except Exception as e:
             return None
-        except Exception:
-            return None
-    
-    async def delete_order(self, id: int, current_user: UserInDb = Depends(get_current_user)):
-        order = self.db.query(Orders).filter(Orders.id == id, Orders.user_id == current_user.id)
+            
+    async def delete_order(self, order_id: int, user_id: int):
+        order = self.db.query(Orders).filter(Orders.id == order_id, Orders.user_id == user_id).one()
+        book_id = order.book_id
+        await self.book_repo.update_book_count(order_id, book_id)
         self.db.delete(order)
-        select(Orders).where(Orders.id  == id)
-        # await self.book_repo.update_book_count(order.id, order.count)
         self.db.commit()
         return {'status':'success', 'message':'Data successfully deleted'}
     
+#Assessment
+# endpoints:
+# checkout cart
+# view cart
 
 
-# order adds with new cart record and stores its id... if cart not closed new order uses the same cart id until closed
-# total count should reduce when order is deleted
 # book search by params
 #pagenation

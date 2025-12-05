@@ -91,8 +91,11 @@ class Cart(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     checkout_date: Mapped[datetime]= mapped_column(server_default=func.now())
-    checked_out: Mapped[bool]
-    amount: Mapped[int]
+    checked_out: Mapped[bool] = mapped_column(default=False)
+    price: Mapped[int]
 
     users: Mapped['Users'] = relationship(back_populates="cart")
     orders: Mapped['Orders'] = relationship(back_populates="cart")
+
+    def __repr__(self):
+        return f'id={self.id}, user_id={self.user_id}, checkout_date={self.checkout_date}, checked_out={self.checked_out}, price={self.price}'

@@ -4,7 +4,6 @@ from datetime import datetime
 
 class OrderBase(BaseModel):
     book_id: int
-    user_id:int
     price: int
     count: int
     date: datetime

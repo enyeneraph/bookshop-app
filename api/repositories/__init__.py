@@ -4,3 +4,4 @@ from repositories.orders import OrderRepo as OrderRepo
 from repositories.inventory import InventoryRepo as InventoryRepo
 from repositories.users import UserRepo as UserRepo
 from repositories.users import get_current_user as get_current_user
+from repositories.cart import CartRepo as CartRepo
