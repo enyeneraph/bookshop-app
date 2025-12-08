@@ -6,7 +6,6 @@ class InventoryBase(BaseModel):
     book_id: int
     date: datetime
     count: int
-    total_count: int
     price: int
     
 class InventoryInDb(InventoryBase):

@@ -5,6 +5,7 @@ from schemas import BookCreate, BookPublic, BookinDB
 from sqlalchemy.sql import func
 from fastapi import HTTPException
 import sqlalchemy
+from models import BookMetaData, Orders
 
 class BookRepository(BaseRepository):
     def __init__(self, db):
@@ -42,3 +43,26 @@ class BookRepository(BaseRepository):
         self.db.commit()
         return {'status':'success', 'message':'Data successfully deleted'}
 
+    async def update_book_count(self, order_id: int, book_id: int):
+        order = select(Orders).where(Orders.id == order_id)
+        order = self.db.execute(order).scalar_one()
+        if order is None:
+           return {f'No Order with ID {order_id} found'}
+        query = select(BookMetaData).where(BookMetaData.book_id == book_id)
+        metadata = self.db.execute(query).scalar_one()
+        metadata.total_count = order.count + metadata.total_count
+        self.db.commit()
+        self.db.refresh(order)
+        return order
+    
+    async def reduce_book_count(self, book_id: int, count: int):
+        metadata = select(BookMetaData).where(BookMetaData.book_id == book_id)
+        metadata = self.db.execute(metadata).scalar_one()
+        print(metadata)
+        if metadata is None:
+            metadata = BookMetaData(book_id = book_id, total_count = 0)
+            self.db.add(metadata)
+        metadata.total_count = metadata.total_count - count
+        self.db.commit()
+        self.db.refresh(metadata)
+        return metadata

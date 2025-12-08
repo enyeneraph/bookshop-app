@@ -5,10 +5,13 @@ from schemas import InventoryPublic, InventoryInDb, InventoryBase,UserInDb
 from sqlalchemy.sql import func
 from repositories.users import get_current_user
 from fastapi import Depends
+from models import BookMetaData
+from repositories import BookRepository
 
 class InventoryRepo(BaseRepository):
     def __init__(self, db):
         super().__init__(db)
+        self.book_repo = BookRepository(db)
 
     async def get_inventory(self, current_user: UserInDb = Depends(get_current_user)):
         query = select(BookInventory)
@@ -19,10 +22,11 @@ class InventoryRepo(BaseRepository):
         result = InventoryPublic(inventory_count=count[0], data=inventory)
         return result
     
-    async def add_book(self, add: InventoryBase):
+    async def add_inventory(self, add: InventoryBase):
         values = add.model_dump(exclude_none=True)
         add = BookInventory(**values)
         self.db.add(add)
+        await self.book_repo.update_book_count(add.book_id, add.count)
         self.db.commit()
         self.db.refresh(add)
         return add
