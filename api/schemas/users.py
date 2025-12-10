@@ -11,8 +11,10 @@ class UserBase(BaseModel):
     first_name: str
     last_name: str
     mail: EmailStr
-    password: str
     role: Optional[Role] = "user"
+
+class UserCreate(UserBase):
+    password: str
 
 class UserInDb(UserBase):
     id: int

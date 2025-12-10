@@ -1,5 +1,5 @@
 from repositories.base import BaseRepository
-from sqlalchemy import select, insert
+from sqlalchemy import select, insert, or_
 from models import Book
 from schemas import BookCreate, BookPublic, BookinDB
 from sqlalchemy.sql import func
@@ -11,14 +11,33 @@ class BookRepository(BaseRepository):
     def __init__(self, db):
         super().__init__(db)
 
-    async def get_all_books(self):
-        query = select(Book)
+    async def get_all_books(self, page:int, page_limit:int):
+        offset = (page - 1) * page_limit
+        query = select(Book).offset(offset).limit(page_limit)
         books = self.db.execute(query).scalars().all()
         count_query = select(func.count()).select_from(Book)
         count = self.db.execute(count_query).one()
         books = [BookinDB.model_validate(book) for book in books]
-        result = BookPublic(total_count=count[0], data=books)
+        result = BookPublic(total_count=count[0], data=books, 
+                            page_limit=page_limit, page=page)
         return result
+    
+    async def search_books(self, search_query:str, page:int, page_limit:int):
+        search_query = f"%{search_query}%"
+        offset = (page - 1) * page_limit
+        query = select(Book).where(or_(Book.title.ilike(search_query), 
+                                       Book.author.ilike(search_query)))
+        count_query = select(func.count()).select_from(query)
+        count = self.db.execute(count_query).one()
+
+        query = query.offset(offset).limit(page_limit)
+        books = self.db.execute(query).scalars().all()
+
+        books = [BookinDB.model_validate(book) for book in books]
+        result = BookPublic(total_count=count[0], data=books, 
+                            page_limit=page_limit, page=page)
+        return result
+    
 
     async def get_book_by_id(self, book_id:int):
         query = select(Book).where(Book.id == book_id)

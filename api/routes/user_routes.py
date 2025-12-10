@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
-from schemas import UserBase, UserInDb, UserPublic
+from schemas import UserBase, UserInDb, UserPublic, UserCreate
 from app_depends import get_repository
 from repositories import UserRepo
 from repositories import get_current_user
@@ -19,7 +19,7 @@ async def view_users(user_repo:UserRepo= Depends(get_repository(UserRepo)), curr
     return users
 
 @router.post("/", response_model=UserInDb)
-async def register(user: UserBase, user_repo:UserRepo= Depends(get_repository(UserRepo))):
+async def register(user: UserCreate, user_repo:UserRepo= Depends(get_repository(UserRepo))):
     users = await user_repo.register(user)
     return users
 

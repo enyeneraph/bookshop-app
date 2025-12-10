@@ -18,4 +18,6 @@ class BookinDB(BookBase):
 
 class BookPublic(BaseModel):
     total_count: int
+    page: int
+    page_limit: int
     data: List[BookinDB]
