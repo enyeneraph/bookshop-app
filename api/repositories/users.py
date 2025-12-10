@@ -1,7 +1,7 @@
 from repositories.base import BaseRepository
 from sqlalchemy import select, insert
 from models import Users, Blacklist
-from schemas import UserBase, UserInDb, UserPublic
+from schemas import UserBase, UserInDb, UserPublic, UserCreate
 from sqlalchemy.sql import func
 from fastapi import FastAPI, Query, Path, status, HTTPException, Depends, status
 from config import *
@@ -14,7 +14,7 @@ class UserRepo(BaseRepository):
     def __init__(self, db):
         super().__init__(db)
 
-    async def register(self, user: UserBase):
+    async def register(self, user: UserCreate):
         try:
             existing_user = self.db.execute(select(Users).where(Users.mail == user.mail)).scalars().one()
         except sqlalchemy.exc.NoResultFound:
