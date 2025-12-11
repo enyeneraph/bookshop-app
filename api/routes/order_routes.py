@@ -17,8 +17,8 @@ async def view_orders(order_repo:OrderRepo= Depends(get_repository(OrderRepo)), 
 @router.post("/", response_model=OrdersInDb)
 async def order_book(order: OrderBase, order_repo:OrderRepo= Depends(get_repository(OrderRepo)), current_user: UserInDb = Depends(get_current_user)):
     orders = await order_repo.add_order(order= order, user_id= current_user.id)
-    if not orders:
-        raise HTTPException(status_code=500, detail="Failed To Create Order")
+    # if not orders:
+    #     raise HTTPException(status_code=500, detail="Failed To Create Order")
     return orders
 
 @router.delete("/{order_id}", response_model=dict)

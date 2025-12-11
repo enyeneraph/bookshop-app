@@ -8,13 +8,14 @@ class CartRepo(BaseRepository):
     def __init__(self, db):
         super().__init__(db)
 
-    async def checkout(self, cart_id: int, car:CartBase):
+    async def checkout(self, cart_id: int, car:CartBase, user_id: int):
         query = select(Cart).where(Cart.id == cart_id)
         cart = self.db.execute(query).scalar_one()
         if not cart:
             return None
 
         values = car.model_dump(exclude_none=True)
+        values.update({"user_id": user_id})
         carts = Cart(**values)
 
         cart.checked_out = carts.checked_out

@@ -14,7 +14,7 @@ async def view_cart(cart_repo:CartRepo= Depends(get_repository(CartRepo)), curre
 
 @router.post("/{cart_id}", response_model=CartInDb)
 async def checkout_cart(cart_id: int, cart: CartBase, cart_repo:CartRepo= Depends(get_repository(CartRepo)), current_user: UserInDb = Depends(get_current_user)):
-    cart = await cart_repo.checkout(cart_id=cart_id, car=cart)
+    cart = await cart_repo.checkout(cart_id=cart_id, car=cart, user_id=current_user.id)
     if not cart:
         raise HTTPException(status_code=404, detail=f'No Cart With id:{cart_id} Was Found')
     return cart
