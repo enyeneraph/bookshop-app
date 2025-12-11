@@ -26,7 +26,7 @@ class InventoryRepo(BaseRepository):
         values = add.model_dump(exclude_none=True)
         add = BookInventory(**values)
         self.db.add(add)
-        await self.book_repo.update_book_count(add.book_id, add.count)
+        await self.book_repo.update_book_count(book_id=add.book_id, count=add.count)
         self.db.commit()
         self.db.refresh(add)
         return add

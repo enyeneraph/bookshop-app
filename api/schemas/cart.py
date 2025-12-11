@@ -3,7 +3,6 @@ from typing import List
 from datetime import datetime
 
 class CartBase(BaseModel):
-    user_id: int
     checkout_date: datetime
     checked_out: bool
     price: int

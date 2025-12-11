@@ -5,7 +5,7 @@ from schemas import BookCreate, BookPublic, BookinDB
 from sqlalchemy.sql import func
 from fastapi import HTTPException
 import sqlalchemy
-from models import BookMetaData, Orders
+from models import BookMetaData, Orders, Cart
 
 class BookRepository(BaseRepository):
     def __init__(self, db):
@@ -62,17 +62,24 @@ class BookRepository(BaseRepository):
         self.db.commit()
         return {'status':'success', 'message':'Data successfully deleted'}
 
-    async def update_book_count(self, order_id: int, book_id: int):
-        order = select(Orders).where(Orders.id == order_id)
-        order = self.db.execute(order).scalar_one()
-        if order is None:
-           return {f'No Order with ID {order_id} found'}
+    async def update_book_count(self, count: int, book_id: int):
+        # order = select(Orders).where(Orders.id == order_id)
+        # order = self.db.execute(order).scalar_one()
+        # if order is None:
+        #    return {f'No Order with ID {order_id} found'}
         query = select(BookMetaData).where(BookMetaData.book_id == book_id)
-        metadata = self.db.execute(query).scalar_one()
-        metadata.total_count = order.count + metadata.total_count
+        metadata = self.db.execute(query).scalar()
+        if metadata is None:
+            data = BookMetaData(book_id = book_id, total_count = count)
+            self.db.add(data)
+            self.db.commit()
+            self.db.refresh(data)
+            return data
+        # metadata = metadata.one()
+        metadata.total_count = count + metadata.total_count
         self.db.commit()
-        self.db.refresh(order)
-        return order
+        self.db.refresh(metadata)
+        return metadata
     
     async def reduce_book_count(self, book_id: int, count: int):
         metadata = select(BookMetaData).where(BookMetaData.book_id == book_id)
@@ -85,3 +92,12 @@ class BookRepository(BaseRepository):
         self.db.commit()
         self.db.refresh(metadata)
         return metadata
+    
+    async def update_price(self, user_id: int, price: int):
+        cart = select(Cart).filter(Cart.user_id == user_id, Cart.checked_out == False)
+        cart = self.db.execute(cart).scalar_one()
+        cart.price = cart.price + price
+        self.db.commit()
+        self.db.refresh(cart)
+        return cart
+        pass
