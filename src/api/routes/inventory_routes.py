@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from schemas import InventoryBase, InventoryInDb, InventoryPublic
-from app_depends import get_repository
-from repositories import InventoryRepo
-from auth import get_current_user
-from schemas import UserInDb
+from api.schemas import InventoryBase, InventoryInDb, InventoryPublic
+from api.app_depends import get_repository
+from api.repositories import InventoryRepo
+from api.auth import get_current_user
+from api.schemas import UserInDb
 
 router = APIRouter(prefix="/inventory", tags=["Inventory"])
 

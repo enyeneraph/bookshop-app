@@ -1,7 +1,7 @@
-from database import SessionLocal
+from api.database import SessionLocal
 from sqlalchemy.orm import Session
 from fastapi import Depends
-from repositories import BaseRepository
+from api.repositories import BaseRepository
 
 def get_db():
     db = SessionLocal()

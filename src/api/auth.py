@@ -1,14 +1,14 @@
 from sqlalchemy import select, insert
-from models import Users, Blacklist
-from schemas import UserBase, UserInDb, UserPublic
+from api.models import Users, Blacklist
+from api.schemas import UserBase, UserInDb, UserPublic
 from fastapi import FastAPI, Query, Path, status, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer
 from pwdlib import PasswordHash
 from datetime import datetime, timedelta
-from config import *
+from api.config import *
 from jose import JWTError, jwt, ExpiredSignatureError
 # from app_depends import get_db
-from database import SessionLocal
+from api.database import SessionLocal
 from sqlalchemy.orm import Session
 
 def get_db():

@@ -1,12 +1,12 @@
-from repositories.base import BaseRepository
+from api.repositories.base import BaseRepository
 from sqlalchemy import select, insert
-from models.books import BookInventory
-from schemas import InventoryPublic, InventoryInDb, InventoryBase,UserInDb
+from api.models.books import BookInventory
+from api.schemas import InventoryPublic, InventoryInDb, InventoryBase,UserInDb
 from sqlalchemy.sql import func
-from repositories.users import get_current_user
+from api.repositories.users import get_current_user
 from fastapi import Depends
-from models import BookMetaData
-from repositories import BookRepository
+from api.models import BookMetaData
+from api.repositories import BookRepository
 
 class InventoryRepo(BaseRepository):
     def __init__(self, db):

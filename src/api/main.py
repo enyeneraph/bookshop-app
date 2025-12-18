@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from database import create_all_tables
+from api.database import create_all_tables
 import uvicorn
-from routes import router
+from api.routes import router
 
 
 @asynccontextmanager

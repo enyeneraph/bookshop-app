@@ -1,11 +1,11 @@
-from repositories.base import BaseRepository
+from api.repositories.base import BaseRepository
 from sqlalchemy import select, insert, or_
-from models import Book
-from schemas import BookCreate, BookPublic, BookinDB
+from api.models import Book
+from api.schemas import BookCreate, BookPublic, BookinDB
 from sqlalchemy.sql import func
 from fastapi import HTTPException
 import sqlalchemy
-from models import BookMetaData, Orders
+from api.models import BookMetaData, Orders
 
 class BookRepository(BaseRepository):
     def __init__(self, db):

@@ -1,7 +1,7 @@
-from repositories.base import BaseRepository
+from api.repositories.base import BaseRepository
 from sqlalchemy import select, insert
-from models.books import Cart
-from schemas import CartInDb, CartPublic, CartBase
+from api.models.books import Cart
+from api.schemas import CartInDb, CartPublic, CartBase
 from sqlalchemy.sql import func
 
 class CartRepo(BaseRepository):

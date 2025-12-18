@@ -1,4 +1,4 @@
-from database import Base, engine
+from api.database import Base, engine
 from sqlalchemy.orm import Mapped
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import relationship
@@ -7,7 +7,7 @@ from sqlalchemy.sql import func
 from datetime import datetime, timezone
 from typing import List
 from sqlalchemy import Enum as SQLAEnum
-from schemas.users import Role
+from api.schemas.users import Role
 
 class Book(Base):
     __tablename__ = "books"

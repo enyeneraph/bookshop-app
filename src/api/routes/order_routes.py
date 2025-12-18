@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from schemas import OrderBase, OrdersInDb, OrdersPublic
-from app_depends import get_repository
-from repositories import OrderRepo
-from auth import get_current_user
-from schemas import UserInDb
+from api.schemas import OrderBase, OrdersInDb, OrdersPublic
+from api.app_depends import get_repository
+from api.repositories import OrderRepo
+from api.auth import get_current_user
+from api.schemas import UserInDb
 
 router = APIRouter(prefix="/order", tags=["Orders"])
 
