@@ -1,5 +1,6 @@
 annotated-types==0.7.0
 anyio==4.11.0
+-e git+https://github.com/enyeneraph/bookshop-app.git@76f5f9a74a798110df63403e22c54bda5bf8e2ce#egg=app
 argon2-cffi==23.1.0
 argon2-cffi-bindings==25.1.0
 async-timeout==5.0.1
