@@ -2,7 +2,7 @@ from dotenv import dotenv_values
 from dotenv import dotenv_values
 from databases import Database
 
-config = dotenv_values("c:/Users/OWNER/Desktop/bookshop-app/.env")
+config = dotenv_values(".env")
 
 POSTGRES_DB = config["POSTGRES_DB"]
 POSTGRES_SERVER = config["POSTGRES_SERVER"]

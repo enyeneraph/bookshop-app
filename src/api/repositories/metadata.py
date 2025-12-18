@@ -1,6 +1,6 @@
-from repositories.base import BaseRepository
+from api.repositories.base import BaseRepository
 from sqlalchemy import select, insert
-from models import MetaData, BookInventory, Book
+from api.models import MetaData, BookInventory, Book
 
 class MetaRepo(BaseRepository):
     def __init__(self, db):

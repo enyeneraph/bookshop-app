@@ -1,13 +1,13 @@
-from repositories.base import BaseRepository
+from api.repositories.base import BaseRepository
 from sqlalchemy import select, insert
-from models import Users, Blacklist
-from schemas import UserBase, UserInDb, UserPublic, UserCreate
+from api.models import Users, Blacklist
+from api.schemas import UserBase, UserInDb, UserPublic, UserCreate
 from sqlalchemy.sql import func
 from fastapi import FastAPI, Query, Path, status, HTTPException, Depends, status
-from config import *
+from api.config import *
 from jose import JWTError, jwt, ExpiredSignatureError
 import sqlalchemy
-from auth import *
+from api.auth import *
 
 
 class UserRepo(BaseRepository):

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
-from schemas import CartBase, CartInDb, CartPublic
-from app_depends import get_repository
-from repositories import CartRepo
-from auth import get_current_user
-from schemas import UserInDb
+from api.schemas import CartBase, CartInDb, CartPublic
+from api.app_depends import get_repository
+from api.repositories import CartRepo
+from api.auth import get_current_user
+from api.schemas import UserInDb
 
 router = APIRouter(prefix="/cart", tags=["Cart"])
 

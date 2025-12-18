@@ -1,10 +1,10 @@
-from repositories.base import BaseRepository
+from api.repositories.base import BaseRepository
 from sqlalchemy import select, insert
-from models.books import Orders, Users, Cart
-from schemas import OrdersInDb, OrdersPublic, OrderBase,UserInDb
+from api.models.books import Orders, Users, Cart
+from api.schemas import OrdersInDb, OrdersPublic, OrderBase,UserInDb
 from sqlalchemy.sql import func
 import sqlalchemy
-from repositories import BookRepository
+from api.repositories import BookRepository
 
 class OrderRepo(BaseRepository):
     def __init__(self, db):
